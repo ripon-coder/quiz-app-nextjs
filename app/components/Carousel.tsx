@@ -15,7 +15,7 @@ const MyCarousel: React.FC = () => {
   }, []);
 
   return (
-    <div className="w-full h-64 md:h-96 relative z-10">
+    <div className="w-full h-64 md:h-96 relative z-10 bg-[#000]">
       <Carousel
         showThumbs={false}
         autoPlay

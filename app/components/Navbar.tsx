@@ -49,19 +49,21 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <ul className="md:hidden flex flex-col bg-gray-800 z-50 fixed top-16 left-0 right-0">
-          {MENU_ITEMS.map(({ href, label }) => (
-            <li key={href} className="w-full">
-              <Link
-                href={href}
-                className="block w-full px-6 py-4 hover:bg-gray-700 hover:text-gray-300"
-                onClick={() => setIsOpen(false)}
-              >
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <div className="relative">
+          <ul className="md:hidden flex flex-col bg-gray-800 z-50 absolute top-full left-0 right-0">
+            {MENU_ITEMS.map(({ href, label }) => (
+              <li key={href} className="w-full">
+                <Link
+                  href={href}
+                  className="block w-full px-6 py-4 hover:bg-gray-700 hover:text-gray-300"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </nav>
   );
