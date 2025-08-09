@@ -1,7 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    domains: ["quiz.bijoytech.com"], // add your image host domain here
+  },
 };
 
 export default nextConfig;
