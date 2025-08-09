@@ -10,7 +10,9 @@ export type CarouselImage = {
 };
 
 export async function fetchCarouselImages(): Promise<CarouselImage[]> {
-  const res = await fetch(`${API_BASE_URL}/page/slider`);
+  const res = await fetch(`${API_BASE_URL}/page/slider`, {
+    next: { revalidate: 3600 },
+  });
   if (!res.ok) throw new Error("Failed to fetch carousel images");
   const json = await res.json();
 

@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+
+@layer components {
+  .quiz-btn {
+    @apply bg-[#3572db] px-3 py-1 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm;
+  }
+}
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

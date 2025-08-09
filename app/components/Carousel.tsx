@@ -31,8 +31,9 @@ const MyCarousel: React.FC = () => {
               alt={img.title ?? "carousel image"}
               fill
               className="object-cover"
-              priority
-              sizes="100vw"
+              priority={true}
+              placeholder="blur"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/wIAAgEB/wF56VsAAAAASUVORK5CYII="
             />
           </div>
         ))}
