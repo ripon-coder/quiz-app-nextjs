@@ -1,21 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation"; // Next.js 13 hook
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import logo from "@/public/logo.png";
+import { useRouter } from "next/navigation";
 
 const MENU_ITEMS = [
   { href: "/", label: "Home" },
   { href: "/ongoing", label: "Ongoing Quizzes" },
   { href: "/services", label: "Upcoming Quizzes" },
-  { href: "/register", label: "Register" },
-  { href: "/login", label: "Login" },
 ];
 
 const Navbar: React.FC = () => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const checkAuth = () => {
+    const token = localStorage.getItem("authToken");
+    setIsLoggedIn(!!token);
+  };
+
+  useEffect(() => {
+    checkAuth();
+  }, [pathname]); // runs every time route changes
+
+  function handleLogout() {
+    localStorage.removeItem("authToken");
+    setIsLoggedIn(false);
+    router.push("/login");
+  }
 
   return (
     <nav className="bg-gray-900 text-white">
@@ -23,7 +41,6 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image src={logo} alt="quiz" />
-          {/* <span className="ml-2 text-2xl font-bold">Quiz</span> */}
         </Link>
 
         {/* Desktop Menu */}
@@ -35,6 +52,30 @@ const Navbar: React.FC = () => {
               </Link>
             </li>
           ))}
+
+          {!isLoggedIn ? (
+            <>
+              <li>
+                <Link href="/register" className="hover:text-gray-300">
+                  Register
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-gray-300">
+                  Login
+                </Link>
+              </li>
+            </>
+          ) : (
+            <li>
+              <button
+                onClick={handleLogout}
+                className="hover:text-gray-300 cursor-pointer bg-transparent border-none"
+              >
+                Logout
+              </button>
+            </li>
+          )}
         </ul>
 
         {/* Mobile Menu Button */}
@@ -62,6 +103,41 @@ const Navbar: React.FC = () => {
                 </Link>
               </li>
             ))}
+
+            {!isLoggedIn ? (
+              <>
+                <li className="w-full">
+                  <Link
+                    href="/register"
+                    className="block w-full px-6 py-4 hover:bg-gray-700 hover:text-gray-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Register
+                  </Link>
+                </li>
+                <li className="w-full">
+                  <Link
+                    href="/login"
+                    className="block w-full px-6 py-4 hover:bg-gray-700 hover:text-gray-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Login
+                  </Link>
+                </li>
+              </>
+            ) : (
+              <li className="w-full">
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsOpen(false);
+                  }}
+                  className="w-full text-left px-6 py-4 hover:bg-gray-700 hover:text-gray-300 bg-transparent border-none"
+                >
+                  Logout
+                </button>
+              </li>
+            )}
           </ul>
         </div>
       )}
