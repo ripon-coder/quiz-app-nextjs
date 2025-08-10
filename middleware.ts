@@ -1,19 +1,29 @@
+// middleware.ts
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("authToken")?.value;
 
-  // If user has token and tries to access /login, redirect to home
-  if (token && request.nextUrl.pathname === "/login") {
-    return NextResponse.redirect(new URL("/", request.url));
+  // If no token and trying to access a protected page
+  if (
+    !token &&
+    (request.nextUrl.pathname.startsWith("/upcoming-quizzes") ||
+      request.nextUrl.pathname.startsWith("/ongoing-quizzes"))
+  ) {
+    const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Otherwise continue
+  // If token exists and trying to visit login/register — redirect to home
+  if (token && ["/login", "/register"].includes(request.nextUrl.pathname)) {
+    const homeUrl = new URL("/", request.url);
+    return NextResponse.redirect(homeUrl);
+  }
+
   return NextResponse.next();
 }
 
-// Specify which paths this middleware should run on:
 export const config = {
-  matcher: ["/login"],
+  matcher: ["/ongoing-quizzess","/upcoming-quizzes", "/login", "/register"], // paths to protect/redirect
 };

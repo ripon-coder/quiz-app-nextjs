@@ -1,17 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { loginUser } from "@/app/lib/api/loginApi";
 import { useRouter } from "next/navigation";
 
 export default function Login() {
   const router = useRouter();
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      router.replace("/");
-    }
-  }, [router]);
+
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -19,18 +14,25 @@ export default function Login() {
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
 
+  function setCookie(name: string, value: string, days: number) {
+    const expires = new Date(Date.now() + days * 864e5).toUTCString();
+    document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires}; path=/; SameSite=Strict`;
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
     setLoading(true);
-    setPassword("");
+
     try {
       const data = await loginUser(email, password);
-      setEmail("");
-      if (data.token) {
-        localStorage.setItem("authToken", data.token);
-        setSuccessMsg("Login successful !");
+      if (data?.token) {
+        setCookie("authToken", data.token, 1); // expires in 1 day
+
+        setSuccessMsg("Login successful!");
+        setEmail("");
+        setPassword("");
         setTimeout(() => {
           router.push("/");
         }, 1000);
@@ -47,9 +49,7 @@ export default function Login() {
   return (
     <div className="py-12 flex items-center justify-center bg-black px-4">
       <div className="bg-[#1a1c1d] p-8 shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">
-          Login
-        </h2>
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Login</h2>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
           {/* email input */}

@@ -8,13 +8,12 @@ export async function loginUser(email: string, password: string) {
     },
     body: JSON.stringify({ email, password }),
   });
-  
+
   if (!res.ok) {
     const errorData = await res.json();
     throw new Error(errorData.message || "Failed to login");
   }
 
   const json = await res.json();
-  console.log(json.data);
-  return json.data; // adjust based on your API response structure
+  return json.data; // Should include token and any other data your API returns
 }

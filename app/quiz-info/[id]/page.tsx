@@ -11,13 +11,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_URL ?? "";
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id?: string }>;
 }) {
-  const id = Number(params.id);
+  const { id } = await params;
   if (!id) return {};
 
   try {
-    const data = await fetchCategoryDataByID(id);
+    const data = await fetchCategoryDataByID(Number(id));
     const firstContent = data.content?.[0];
 
     return {
@@ -75,11 +75,11 @@ export default async function Quizinfo({
       </div>
 
       {categories?.recent_finish?.length > 0 ? (
-        <div className="flex flex-col md:flex-row gap-4 px-1 py-8 bg-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-8 py-8 bg-black">
           {categories.recent_finish.map((category: any) => (
             <div
               key={category.id}
-              className="md:w-1/4 pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-lg"
+              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-lg"
             >
               <div className="w-full aspect-video my-4">
                 {categories.content[0].video ? (

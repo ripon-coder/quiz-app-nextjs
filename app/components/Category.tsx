@@ -25,11 +25,11 @@ const Category = async () => {
 
   return (
     <>
-      <div className="flex flex-col md:flex-row gap-4 px-4 py-8 bg-black">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-8 py-8 bg-black">
         {categories.map((category: any) => (
           <div
             key={category.id}
-            className="md:w-1/4 pt-4 px-4 bg-black border-2 border-gray-700 rounded-lg"
+            className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-lg"
           >
             <div className="flex justify-center items-center">
               <NotebookTabs className="w-8 h-8 text-[#448AFF]" />
@@ -67,10 +67,10 @@ const Category = async () => {
         ))}
       </div>
       <div className="bg-[#000] flex justify-center gap-4 pb-10 pt-2">
-        <button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
-">All ongoing Quiz</button>
-        <button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
-">Upcoming Quiz</button>
+        <Link href="ongoing-quizzess"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
+">All ongoing Quiz</button></Link>
+        <Link href="upcoming-quizzes"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
+">Upcoming Quiz</button></Link>
       </div>
     </>
   );

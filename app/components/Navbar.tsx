@@ -2,36 +2,27 @@
 
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { usePathname } from "next/navigation"; // Next.js 13 hook
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import logo from "@/public/logo.png";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/lib/useAuth";
+
 
 const MENU_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/ongoing", label: "Ongoing Quizzes" },
-  { href: "/services", label: "Upcoming Quizzes" },
+  { href: "/ongoing-quizzess", label: "Ongoing Quizzes" },
+  { href: "/upcoming-quizzes", label: "Upcoming Quizzes" },
 ];
 
+
 const Navbar: React.FC = () => {
+  const { isLoggedIn, logout } = useAuth();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const checkAuth = () => {
-    const token = localStorage.getItem("authToken");
-    setIsLoggedIn(!!token);
-  };
-
-  useEffect(() => {
-    checkAuth();
-  }, [pathname]); // runs every time route changes
 
   function handleLogout() {
-    localStorage.removeItem("authToken");
-    setIsLoggedIn(false);
+    logout();
     router.push("/login");
   }
 
