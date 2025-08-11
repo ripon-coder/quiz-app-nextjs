@@ -24,7 +24,7 @@ export default async function UpcomingQuiz() {
           {upComingQuiz.map((quiz: any) => (
             <div
               key={quiz.id}
-              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-lg"
+              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-sm"
             >
               <div className="w-full aspect-video my-4 relative">
                 {/* If you want video playback: */}
@@ -53,7 +53,7 @@ export default async function UpcomingQuiz() {
               <ul className="text-sm py-3 text-[#afa5a5] italic">
                 <li className="pt-1.5">
                   Quiz Play Time:{" "}
-                  <span className="text-[12.5px] text-[#34cc21]">
+                  <span className="text-[12px] text-[#34cc21]">
                     {formatDateToDDMMYYYY(quiz.start_date)} -{" "}
                     {formatDateToDDMMYYYY(quiz.end_date)} {quiz.end_time}
                   </span>

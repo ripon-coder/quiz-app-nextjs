@@ -1,6 +1,9 @@
 export function stripHtml(html: string) {
-    return html.replace(/<[^>]*>?/gm, "").trim();
+  let text = html.replace(/<[^>]*>?/gm, "").trim();
+  text = text.replace(/&nbsp;/g, " ");
+  return text;
 }
+
 
 
 export function truncateText(text: string, maxLength: number) {

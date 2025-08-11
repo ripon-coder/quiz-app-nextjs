@@ -18,6 +18,7 @@ export async function generateMetadata({
 
   try {
     const data = await fetchCategoryDataByID(Number(id));
+    console.log(data);
     const firstContent = data.content?.[0];
 
     return {
@@ -79,7 +80,7 @@ export default async function Quizinfo({
           {categories.recent_finish.map((category: any) => (
             <div
               key={category.id}
-              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-lg"
+              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-sm"
             >
               <div className="w-full aspect-video my-4">
                 {categories.content[0].video ? (
@@ -109,7 +110,7 @@ export default async function Quizinfo({
                 <ul className="text-sm py-3 text-[#afa5a5] italic">
                   <li className="pt-1.5">
                     Quiz Play Time:{" "}
-                    <span className="text-[12.5px] text-[#34cc21]">
+                    <span className="text-[11px] text-[#34cc21]">
                       {formatDateToDDMMYYYY(category.start_date)} -{" "}
                       {formatDateToDDMMYYYY(category.end_date)}&nbsp;
                       {category.end_time}
