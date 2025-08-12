@@ -21,3 +21,11 @@ export function formatDateToDDMMYYYY(datetimeString: string): string {
 
   return `${day}-${month}-${year}`;
 }
+
+export function getYoutubeEmbedUrl(url: string) {
+  const match = url.match(/v=([^&?]+)/);
+  if (!match) return null;
+  const videoId = match[1];
+  const params = url.split('?')[1]?.replace(/^v=[^&]+&?/, '') || '';
+  return `https://www.youtube.com/embed/${videoId}${params ? `?${params}` : ''}`;
+}

@@ -8,13 +8,11 @@ import logo from "@/public/logo.png";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/lib/useAuth";
 
-
 const MENU_ITEMS = [
   { href: "/", label: "Home" },
   { href: "/ongoing-quizzess", label: "Ongoing Quizzes" },
   { href: "/upcoming-quizzes", label: "Upcoming Quizzes" },
 ];
-
 
 const Navbar: React.FC = () => {
   const { isLoggedIn, logout } = useAuth();
@@ -58,14 +56,21 @@ const Navbar: React.FC = () => {
               </li>
             </>
           ) : (
-            <li>
-              <button
-                onClick={handleLogout}
-                className="hover:text-gray-300 cursor-pointer bg-transparent border-none"
-              >
-                Logout
-              </button>
-            </li>
+            <>
+              <li>
+                <Link href="/user/profile" className="hover:text-gray-300">
+                  Profile
+                </Link>
+              </li>
+              <li>
+                <button
+                  onClick={handleLogout}
+                  className="hover:text-gray-300 cursor-pointer bg-transparent border-none"
+                >
+                  Logout
+                </button>
+              </li>
+            </>
           )}
         </ul>
 
@@ -117,17 +122,28 @@ const Navbar: React.FC = () => {
                 </li>
               </>
             ) : (
-              <li className="w-full">
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsOpen(false);
-                  }}
-                  className="w-full text-left px-6 py-4 hover:bg-gray-700 hover:text-gray-300 bg-transparent border-none"
-                >
-                  Logout
-                </button>
-              </li>
+              <>
+                <li className="w-full">
+                  <Link
+                    href="/user/profile"
+                    className="block w-full px-6 py-4 hover:bg-gray-700 hover:text-gray-300"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                </li>
+                <li className="w-full">
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                    className="w-full text-left px-6 py-4 hover:bg-gray-700 hover:text-gray-300 bg-transparent border-none"
+                  >
+                    Logout
+                  </button>
+                </li>
+              </>
             )}
           </ul>
         </div>

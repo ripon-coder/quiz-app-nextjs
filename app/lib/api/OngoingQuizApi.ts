@@ -8,7 +8,7 @@ export async function fetchOngoingQuiz() {
     throw new Error('No auth token found');
   }
 
-  const res = await fetch(`${API_BASE_URL}/ongoing-quiz`, {
+  const res = await fetch(`${API_BASE_URL}/user/quizzes`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },

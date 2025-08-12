@@ -9,7 +9,8 @@ export function middleware(request: NextRequest) {
   if (
     !token &&
     (request.nextUrl.pathname.startsWith("/upcoming-quizzes") ||
-      request.nextUrl.pathname.startsWith("/ongoing-quizzes"))
+      request.nextUrl.pathname.startsWith("/ongoing-quizzes") ||
+      request.nextUrl.pathname.startsWith("/join-quiz"))
   ) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
@@ -25,5 +26,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/ongoing-quizzess","/upcoming-quizzes", "/login", "/register"], // paths to protect/redirect
+  matcher: ["/ongoing-quizzess", "/upcoming-quizzes","/join-quiz", "/login", "/register"], // paths to protect/redirect
 };

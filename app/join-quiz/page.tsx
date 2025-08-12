@@ -4,6 +4,8 @@ import Image from "next/image";
 import { formatDateToDDMMYYYY, stripHtml } from "@/app/lib/helper";
 import GeneralQuiz from "@/app/components/GeneralQuiz";
 import ReadingQuiz from "@/app/components/ReadingQuiz";
+import VideoQuiz from "@/app/components/VideoQuiz";
+import SpellingQuiz from "@/app/components/SpellingQuiz";
 
 export default async function JoinQuizPage({ searchParams }: any) {
   const { id, status } = await searchParams;
@@ -11,12 +13,20 @@ export default async function JoinQuizPage({ searchParams }: any) {
   const data = await fetchJoinQuiz(Number(id), Number(status));
   const quizImg = data.quiz_img;
   const quizzes = data.quiz;
-  return (
-    <>
-      <div className=" bg-black text-white">
-           {status === "1" && <GeneralQuiz quizzes={quizzes} quizImg={quizImg} />}
-           {status === "3" && <ReadingQuiz quizzes={quizzes} quizImg={quizImg} />}
+return (
+  <div className="bg-black text-white min-h-screen">
+    {String(status) === "1" && <GeneralQuiz quizzes={quizzes} quizImg={quizImg} />}
+    {String(status) === "2" && <SpellingQuiz quizzes={quizzes} quizImg={quizImg} />}
+    {String(status) === "3" && <ReadingQuiz quizzes={quizzes} quizImg={quizImg} />}
+    {String(status) === "4" && <VideoQuiz quizzes={quizzes} quizImg={quizImg} />}
+
+    {!["1", "2", "3", "4"].includes(String(status)) && (
+      <div className="p-10 text-center">
+        <h1 className="text-2xl font-bold">Quiz not found</h1>
+        <p className="text-gray-400">Please select a valid quiz.</p>
       </div>
-    </>
-  );
+    )}
+  </div>
+);
+
 }
