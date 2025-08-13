@@ -3,22 +3,18 @@ import { NextResponse } from "next/server";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
-// Helper function to get auth token
+// Get auth token from cookies
 async function getAuthToken() {
   const cookieStore = await cookies();
   return cookieStore.get("authToken")?.value;
 }
 
-// GET endpoint (unchanged)
 export async function GET() {
-  const token = await getAuthToken(); // <-- add await here
-  console.log("Token:", token);
-  if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const token = await getAuthToken();
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const res = await fetch(`${API_BASE_URL}/user/get-user-profile`, {
+    const res = await fetch(`${API_BASE_URL}/user/user-info`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -27,7 +23,8 @@ export async function GET() {
     });
 
     if (!res.ok) {
-      throw new Error("Failed to fetch profile");
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to fetch profile");
     }
 
     const data = await res.json();
@@ -42,51 +39,47 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const token = await getAuthToken();
-  if (!token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    // Read profile data from client
-    const profileData = await request.json();
+    const formData = await request.formData();
+    const file = formData.get("image");
 
-    // Forward request to backend
-    const res = await fetch(`${API_BASE_URL}/user/profile-update`, {
+    if (!file || typeof file === "string") {
+      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    const backendFormData = new FormData();
+    backendFormData.append("image", file);
+
+    const res = await fetch(`${API_BASE_URL}/user/image-upload`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(profileData),
+      body: backendFormData,
     });
 
-    // Handle backend response
+    // Safe parsing
+    const resText = await res.text();
     let backendResponse: any;
-    const contentType = res.headers.get("content-type");
-
-    if (contentType && contentType.includes("application/json")) {
-      backendResponse = await res.json();
-    } else {
-      backendResponse = await res.text();
-      // Wrap text in object so frontend always receives JSON
-      backendResponse = { message: backendResponse };
+    try {
+      backendResponse = resText ? JSON.parse(resText) : {};
+    } catch {
+      backendResponse = { message: resText || "No response from server" };
     }
 
-    // Check if backend returned error
     if (!res.ok) {
       return NextResponse.json(
         {
-          error:
-            backendResponse?.error ||
-            backendResponse?.message ||
-            "Failed to save profile",
+          error: backendResponse?.error || backendResponse?.message || "Upload failed",
           backendResponse,
         },
         { status: 500 }
       );
     }
 
-    // Success
+    // Ensure backend returns updated image name
     return NextResponse.json(backendResponse);
   } catch (error) {
     return NextResponse.json(

@@ -1,4 +1,4 @@
-// import ProfileCard from "../components/ProfileCard";
+import ProfileCard from "@/app/components/ProfileCard";
 
 export default function RootLayout({
   children,
@@ -8,7 +8,7 @@ export default function RootLayout({
   return (
     <div className="flex flex-col md:flex-row">
       <div className="py-6  w-full md:w-[20%] bg-[#131415] flex justify-center items-center flex-col">
-        {/* <ProfileCard /> */}
+        <ProfileCard />
         <div className="text-white w-full">
           <ul className="w-full">
             <li className="w-full block py-2 pl-6 hover:bg-black cursor-pointer my-1">
