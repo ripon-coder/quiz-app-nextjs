@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import countryList from "@/app/lib/countrylist";
+import Spinner from "@/app/components/Spinner";
+
 export default function Profile() {
   const [value, setValue] = useState({
     name: "",
@@ -23,9 +25,11 @@ export default function Profile() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [saving, setSave] = useState(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
+      setSave(true);
       try {
         const response = await fetch("/user/profile/api");
         if (!response.ok) {
@@ -55,6 +59,7 @@ export default function Profile() {
         }
       } catch (err) {
       } finally {
+        setSave(false);
       }
     };
     fetchProfile();
@@ -117,229 +122,236 @@ export default function Profile() {
 
   return (
     <div className="px-5 py-5">
-      {success ? <p className="text-emerald-400 text-center p-1">Saved Successfully!</p> : null}
-      {error ? <p className="text-red-500 text-center p-1">Failed to save profile!</p> : null}
+      <div className="relative">
+        {saving && <Spinner />}
+        {success ? (
+          <p className="text-emerald-400 text-center p-1">Saved Successfully!</p>
+        ) : null}
+        {error ? (
+          <p className="text-red-500 text-center p-1">Failed to save profile!</p>
+        ) : null}
 
-      <form action="" onSubmit={(e) => handleSubmit(e)}>
-        <div className="flex flex-col md:flex-row justify-between gap-5">
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Full Name</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              required
-              type="text"
-              value={value.name}
-              onChange={(e) => setValue({ ...value, name: e.target.value })}
-            />
-          </div>
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Email</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="email"
-              required
-              value={value.email}
-              onChange={(e) => setValue({ ...value, email: e.target.value })}
-            />
-          </div>
+        <form action="" onSubmit={(e) => handleSubmit(e)}>
+          <div className="flex flex-col md:flex-row justify-between gap-5">
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Full Name</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                required
+                type="text"
+                value={value.name}
+                onChange={(e) => setValue({ ...value, name: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Email</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="email"
+                required
+                value={value.email}
+                onChange={(e) => setValue({ ...value, email: e.target.value })}
+              />
+            </div>
 
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Date of Birth</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              placeholder="dd/mm/yyyy"
-              pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$"
-              title="Please enter a valid date in dd/mm/yyyy format"
-              maxLength={10}
-              value={value.date_of_birth}
-              onChange={(e) => DateBirthChange(e)}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
-          <div className="flex flex-col flex-1">
-            <label className="py-0.5 text-sm">Grade</label>
-            <select
-              className="border border-gray-300 focus:outline-none p-1.5 pl-2"
-              onChange={(e) => setValue({ ...value, grade: e.target.value })}
-              value={value.grade}
-            >
-              <option value="" disabled>
-                Choose...
-              </option>
-              <option className="bg-black" value="0-5 grade">
-                0-5 grade
-              </option>
-              <option className="bg-black" value="6-8 grade">
-                6-8 grade
-              </option>
-              <option className="bg-black" value="9-12 grade">
-                9-12 grade
-              </option>
-              <option className="bg-black" value="above/adult">
-                Above/Adult
-              </option>
-            </select>
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Date of Birth</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                placeholder="dd/mm/yyyy"
+                pattern="^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$"
+                title="Please enter a valid date in dd/mm/yyyy format"
+                maxLength={10}
+                value={value.date_of_birth}
+                onChange={(e) => DateBirthChange(e)}
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col flex-1">
-            <label className="py-0.5 text-sm">Occupation</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              required
-              value={value.occupation}
-              onChange={(e) =>
-                setValue({ ...value, occupation: e.target.value })
-              }
-            />
-          </div>
-
-          <div className="flex flex-col flex-1">
-            <label className="py-0.5 text-sm">Phone</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              required
-              value={value.phone}
-              onChange={(e) => setValue({ ...value, phone: e.target.value })}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Address</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              required
-              value={value.address}
-              onChange={(e) => setValue({ ...value, address: e.target.value })}
-            />
-          </div>
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">City</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              required
-              value={value.city}
-              onChange={(e) => setValue({ ...value, city: e.target.value })}
-            />
-          </div>
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">State</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              required
-              value={value.state}
-              onChange={(e) => setValue({ ...value, state: e.target.value })}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
-          {/* ZIP */}
-          <div className="flex flex-col flex-1">
-            <label className="py-0.5 text-sm">Zip</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2 w-full"
-              type="text"
-              required
-              value={value.zip}
-              onChange={(e) => setValue({ ...value, zip: e.target.value })}
-            />
-          </div>
-
-          {/* Country */}
-          <div className="flex flex-col flex-1">
-            <label className="py-0.5 text-sm">Country</label>
-            <select
-              className="border border-gray-300 focus:outline-none p-1.5 pl-2 w-full"
-              value={value.country}
-              onChange={(e) => setValue({ ...value, country: e.target.value })}
-            >
-              <option value="" disabled>
-                Select country
-              </option>
-              {countryList.map((country) => (
-                <option
-                  key={country.code}
-                  value={country.code}
-                  className="bg-black text-sm"
-                >
-                  {country.name}
+          <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
+            <div className="flex flex-col flex-1">
+              <label className="py-0.5 text-sm">Grade</label>
+              <select
+                className="border border-gray-300 focus:outline-none p-1.5 pl-2"
+                onChange={(e) => setValue({ ...value, grade: e.target.value })}
+                value={value.grade}
+              >
+                <option value="" disabled>
+                  Choose...
                 </option>
-              ))}
-            </select>
+                <option className="bg-black" value="0-5 grade">
+                  0-5 grade
+                </option>
+                <option className="bg-black" value="6-8 grade">
+                  6-8 grade
+                </option>
+                <option className="bg-black" value="9-12 grade">
+                  9-12 grade
+                </option>
+                <option className="bg-black" value="above/adult">
+                  Above/Adult
+                </option>
+              </select>
+            </div>
+
+            <div className="flex flex-col flex-1">
+              <label className="py-0.5 text-sm">Occupation</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                required
+                value={value.occupation}
+                onChange={(e) =>
+                  setValue({ ...value, occupation: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="flex flex-col flex-1">
+              <label className="py-0.5 text-sm">Phone</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                required
+                value={value.phone}
+                onChange={(e) => setValue({ ...value, phone: e.target.value })}
+              />
+            </div>
           </div>
 
-          {/* Guardian */}
-          <div className="flex flex-col flex-1">
-            <label className="py-0.5 text-sm">Guardian</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2 w-full"
-              type="text"
-              value={value.guardian}
-              onChange={(e) => setValue({ ...value, guardian: e.target.value })}
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Relation with Guardian</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              value={value.relation_with_guardian}
-              onChange={(e) =>
-                setValue({ ...value, relation_with_guardian: e.target.value })
-              }
-            />
-          </div>
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Guardian Phone</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              value={value.guardian_phone}
-              onChange={(e) =>
-                setValue({ ...value, guardian_phone: e.target.value })
-              }
-            />
+          <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Address</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                required
+                value={value.address}
+                onChange={(e) => setValue({ ...value, address: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">City</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                required
+                value={value.city}
+                onChange={(e) => setValue({ ...value, city: e.target.value })}
+              />
+            </div>
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">State</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                required
+                value={value.state}
+                onChange={(e) => setValue({ ...value, state: e.target.value })}
+              />
+            </div>
           </div>
 
-          <div className="flex flex-col grow">
-            <label className="py-0.5 text-sm">Guardian Email</label>
-            <input
-              className="border border-gray-300 focus:outline-none p-1 pl-2"
-              type="text"
-              value={value.guardian_email}
-              onChange={(e) =>
-                setValue({ ...value, guardian_email: e.target.value })
-              }
-            />
+          <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
+            {/* ZIP */}
+            <div className="flex flex-col flex-1">
+              <label className="py-0.5 text-sm">Zip</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2 w-full"
+                type="text"
+                required
+                value={value.zip}
+                onChange={(e) => setValue({ ...value, zip: e.target.value })}
+              />
+            </div>
+
+            {/* Country */}
+            <div className="flex flex-col flex-1">
+              <label className="py-0.5 text-sm">Country</label>
+              <select
+                className="border border-gray-300 focus:outline-none p-1.5 pl-2 w-full"
+                value={value.country}
+                onChange={(e) => setValue({ ...value, country: e.target.value })}
+              >
+                <option value="" disabled>
+                  Select country
+                </option>
+                {countryList.map((country) => (
+                  <option
+                    key={country.code}
+                    value={country.code}
+                    className="bg-black text-sm"
+                  >
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Guardian */}
+            <div className="flex flex-col flex-1">
+              <label className="py-0.5 text-sm">Guardian</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2 w-full"
+                type="text"
+                value={value.guardian}
+                onChange={(e) => setValue({ ...value, guardian: e.target.value })}
+              />
+            </div>
           </div>
-        </div>
-        <div className="pt-5">
-          <button
-            className={`py-1.5 px-5 ${
-              loading
-                ? "bg-gray-400"
-                : "bg-[#1e60d3] hover:bg-[#122f61] cursor-pointer"
-            }`}
-            type="submit"
-            disabled={loading}
-          >
-            {loading ? `Saving....` : `Save`}
-          </button>
-        </div>
-      </form>
+
+          <div className="flex flex-col md:flex-row justify-between gap-5 mt-5">
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Relation with Guardian</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                value={value.relation_with_guardian}
+                onChange={(e) =>
+                  setValue({ ...value, relation_with_guardian: e.target.value })
+                }
+              />
+            </div>
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Guardian Phone</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                value={value.guardian_phone}
+                onChange={(e) =>
+                  setValue({ ...value, guardian_phone: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="flex flex-col grow">
+              <label className="py-0.5 text-sm">Guardian Email</label>
+              <input
+                className="border border-gray-300 focus:outline-none p-1 pl-2"
+                type="text"
+                value={value.guardian_email}
+                onChange={(e) =>
+                  setValue({ ...value, guardian_email: e.target.value })
+                }
+              />
+            </div>
+          </div>
+          <div className="pt-5">
+            <button
+              className={`py-1.5 px-5 ${
+                loading
+                  ? "bg-gray-400"
+                  : "bg-[#1e60d3] hover:bg-[#122f61] cursor-pointer"
+              }`}
+              type="submit"
+              disabled={loading}
+            >
+              {loading ? `Saving....` : `Save`}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

@@ -34,41 +34,26 @@ export default function ProfileCard() {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setUploading(true);
+    setPreview(URL.createObjectURL(file));
+
     try {
-      setUploading(true);
-      setPreview(URL.createObjectURL(file));
-
       const formData = new FormData();
-      formData.append("image", file, file.name);
+      formData.append("image", file);
 
-      const res = await fetch("/user/api", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch("/user/api", { method: "POST", body: formData });
+      const data = await res.json();
 
-      // Safe parsing
-      const resText = await res.text();
-      let uploaded: any;
-      try {
-        uploaded = resText ? JSON.parse(resText) : {};
-      } catch {
-        uploaded = { message: resText || "No response from server" };
-      }
+      if (!res.ok) throw new Error(data?.error || "Upload failed");
 
-      if (!res.ok) {
-        throw new Error(uploaded.error || uploaded.message || "Upload failed");
-      }
+      console.log("Upload success:", data);
 
-      console.log("Upload success:", uploaded);
-
-      // Refresh profile after upload
-      const profileRes = await fetch("/user/api");
-      const profileText = await profileRes.text();
-      const profileJson = profileText ? JSON.parse(profileText) : {};
-      setData(profileJson.data || profileJson);
-    } catch (error) {
-      console.error("Upload failed:", error);
-      alert(error instanceof Error ? error.message : "Upload failed");
+      // Refresh profile
+      const profile = await fetch("/user/api").then((r) => r.json());
+      setData(profile.data || profile);
+    } catch (err) {
+      console.error("Upload failed:", err);
+      alert(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
     }
@@ -79,7 +64,7 @@ export default function ProfileCard() {
   return (
     <>
       <div
-        className="w-24 h-24 rounded-full ring-1 ring-[#fff] overflow-hidden bg-black relative group cursor-pointer"
+        className="w-24 h-24 rounded-full ring-3 ring-[#3572db] overflow-hidden bg-black relative group cursor-pointer"
         onClick={handleImageClick}
       >
         <Image

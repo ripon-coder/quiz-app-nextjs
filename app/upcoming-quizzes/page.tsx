@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import { fetchUpcomingQuiz } from "@/app/lib/api/upComingQuizApi";
 import { formatDateToDDMMYYYY } from "@/app/lib/helper";
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL ?? "";
@@ -11,12 +10,16 @@ export const metadata: Metadata = {
 export default async function UpcomingQuiz() {
   let upComingQuiz: any = [];
   try {
-    upComingQuiz = await fetchUpcomingQuiz();
+    const res = await fetch(`http://localhost:3000/upcoming-quizzes/api`);
+    if (!res.ok) {
+      throw new Error("Failed to fetch upcoming quizzes");
+    }
+    const quizData = await res.json();
+    upComingQuiz = quizData.data;
   } catch (error) {
     console.error("Failed to fetch upcoming quizzes", error);
     return <p className="text-gray-400 pt-4">Failed to load quizzes.</p>;
   }
-
   return (
     <>
       {upComingQuiz?.length > 0 ? (

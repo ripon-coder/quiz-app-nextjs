@@ -39,7 +39,9 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const token = await getAuthToken();
-  if (!token) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const formData = await request.formData();
@@ -54,33 +56,17 @@ export async function POST(request: Request) {
 
     const res = await fetch(`${API_BASE_URL}/user/image-upload`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
       body: backendFormData,
     });
 
-    // Safe parsing
-    const resText = await res.text();
-    let backendResponse: any;
-    try {
-      backendResponse = resText ? JSON.parse(resText) : {};
-    } catch {
-      backendResponse = { message: resText || "No response from server" };
-    }
+    const data = await res.json();
 
     if (!res.ok) {
-      return NextResponse.json(
-        {
-          error: backendResponse?.error || backendResponse?.message || "Upload failed",
-          backendResponse,
-        },
-        { status: 500 }
-      );
+      return NextResponse.json({ error: data?.message || "Upload failed" }, { status: res.status });
     }
 
-    // Ensure backend returns updated image name
-    return NextResponse.json(backendResponse);
+    return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
