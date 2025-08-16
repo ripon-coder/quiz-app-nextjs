@@ -76,7 +76,7 @@ export default async function Quizinfo({
       </div>
 
       {categories?.recent_finish?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-1 md:px-8 py-8 bg-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-0 md:px-8 py-8 bg-black">
           {categories.recent_finish.map((category: any) => (
             <div
               key={category.id}
