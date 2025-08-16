@@ -17,7 +17,6 @@ export async function fetchOngoingQuiz() {
   if (!res.ok) throw new Error('Failed to fetch ongoing quiz data');
 
   const json = await res.json();
-    console.log("Ongoing Quiz Data:", json.data);
   return json.data;
 
 }

@@ -1,5 +1,5 @@
 "use client";
-
+import type { Metadata } from "next";
 import { useState } from "react";
 
 export default function ChangePasswordPage() {
@@ -11,61 +11,61 @@ export default function ChangePasswordPage() {
     confirmPassword: "",
   });
 
-const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  if (value.newPassword !== value.confirmPassword) {
-    setError("Passwords do not match.");
-    setSuccess("");
-    return;
-  }
-
-  setLoading(true);
-  setError("");
-  setSuccess("");
-
-  try {
-    const res = await fetch("/user/change-password/api", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(value),
-    });
-
-    let data: any = null;
-    try {
-      data = await res.json();
-    } catch {
-      data = null;
-    }
-
-    if (!res.ok) {
-      // Convert object to string if needed
-      const message =
-        typeof data?.error === "string"
-          ? data.error
-          : typeof data?.message === "string"
-          ? data.message
-          : JSON.stringify(data) || "Failed to change password";
-
-      setError(message);
+    if (value.newPassword !== value.confirmPassword) {
+      setError("Passwords do not match.");
+      setSuccess("");
       return;
     }
 
-    // success
-    setSuccess("Password changed successfully!");
-    setValue({
-      newPassword: "",
-      confirmPassword: "",
-    });
+    setLoading(true);
+    setError("");
+    setSuccess("");
 
-    console.log("Password changed:", data);
-  } catch (err) {
-    const message = err instanceof Error ? err.message : JSON.stringify(err);
-    setError(message);
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      const res = await fetch("/user/change-password/api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(value),
+      });
+
+      let data: any = null;
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok) {
+        // Convert object to string if needed
+        const message =
+          typeof data?.error === "string"
+            ? data.error
+            : typeof data?.message === "string"
+            ? data.message
+            : JSON.stringify(data) || "Failed to change password";
+
+        setError(message);
+        return;
+      }
+
+      // success
+      setSuccess("Password changed successfully!");
+      setValue({
+        newPassword: "",
+        confirmPassword: "",
+      });
+
+      console.log("Password changed:", data);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : JSON.stringify(err);
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="px-5 pb-5">

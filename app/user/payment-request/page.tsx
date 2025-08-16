@@ -1,4 +1,6 @@
 "use client";
+
+import type { Metadata } from "next";
 import { useState } from "react";
 
 export default function PaymentRequestPage() {
@@ -78,13 +80,27 @@ export default function PaymentRequestPage() {
               <option className="bg-black" value="" disabled>
                 Choose...
               </option>
-              <option className="bg-black" value="paypal">Paypal</option>
-              <option className="bg-black" value="bkash">Bkash</option>
-              <option className="bg-black" value="zille">Zille</option>
-              <option className="bg-black" value="quickpay">Quick Pay</option>
-              <option className="bg-black" value="bank-deposit">Bank Deposit</option>
-              <option className="bg-black" value="rocket">Rocket</option>
-              <option className="bg-black" value="nagad">Nagad</option>
+              <option className="bg-black" value="paypal">
+                Paypal
+              </option>
+              <option className="bg-black" value="bkash">
+                Bkash
+              </option>
+              <option className="bg-black" value="zille">
+                Zille
+              </option>
+              <option className="bg-black" value="quickpay">
+                Quick Pay
+              </option>
+              <option className="bg-black" value="bank-deposit">
+                Bank Deposit
+              </option>
+              <option className="bg-black" value="rocket">
+                Rocket
+              </option>
+              <option className="bg-black" value="nagad">
+                Nagad
+              </option>
             </select>
           </div>
 

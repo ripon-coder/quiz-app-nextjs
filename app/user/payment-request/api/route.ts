@@ -9,7 +9,6 @@ async function getAuthToken() {
   return cookieStore.get("authToken")?.value;
 }
 
-
 export async function POST(request: Request) {
   const token = await getAuthToken();
   if (!token) {
@@ -30,34 +29,18 @@ export async function POST(request: Request) {
       body: JSON.stringify(dataPayment),
     });
 
-    // Handle backend response
-    let backendResponse: any;
-    const contentType = res.headers.get("content-type");
-
-    if (contentType && contentType.includes("application/json")) {
-      backendResponse = await res.json();
-    } else {
-      backendResponse = await res.text();
-      // Wrap text in object so frontend always receives JSON
-      backendResponse = { message: backendResponse };
-    }
-
     // Check if backend returned error
     if (!res.ok) {
       return NextResponse.json(
         {
-          error:
-            backendResponse?.error ||
-            backendResponse?.message ||
-            "Failed to save payment request",
-          backendResponse,
+          error: "Failed to sent payment request",
         },
         { status: 500 }
       );
     }
 
     // Success
-    return NextResponse.json(backendResponse);
+    return NextResponse.json(res.json());
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },

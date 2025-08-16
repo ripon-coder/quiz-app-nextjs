@@ -9,26 +9,27 @@ async function getAuthToken() {
   return cookieStore.get("authToken")?.value;
 }
 
-
+// GET endpoint (unchanged)
 export async function GET() {
+
   try {
-    console.log("Fetching upcoming quiz from API...");
-    const res = await fetch(`${API_BASE_URL}/upcoming-quiz`, {
-      headers: { "Content-Type": "application/json" },
+    const res = await fetch(`${API_BASE_URL}/user/upcoming-quiz`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
     });
 
     if (!res.ok) {
-      throw new Error("Failed to fetch upcoming quizzes");
+      throw new Error("Failed to fetch profile");
     }
+
     const data = await res.json();
     return NextResponse.json(data);
   } catch (error) {
-    console.error("Error in route.ts:", error);
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
     );
   }
 }
-
-

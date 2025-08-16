@@ -1,10 +1,14 @@
 "use client";
 
+import type { Metadata } from "next";
 import { useState, useEffect } from "react";
 import countryList from "@/app/lib/countrylist";
 import Spinner from "@/app/components/Spinner";
 
+
+
 export default function Profile() {
+
   const [value, setValue] = useState({
     name: "",
     email: "",
