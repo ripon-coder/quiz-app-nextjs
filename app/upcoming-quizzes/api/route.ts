@@ -1,18 +1,10 @@
-import { cookies } from "next/headers";
+
 import { NextResponse } from "next/server";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
-// Helper function to get auth token
-async function getAuthToken() {
-  const cookieStore = await cookies();
-  return cookieStore.get("authToken")?.value;
-}
-
-
 export async function GET() {
   try {
-    console.log("Fetching upcoming quiz from API...");
     const res = await fetch(`${API_BASE_URL}/upcoming-quiz`, {
       headers: { "Content-Type": "application/json" },
     });
