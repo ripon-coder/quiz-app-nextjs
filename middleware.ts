@@ -6,7 +6,6 @@ export function middleware(request: NextRequest) {
   const token = request.cookies.get("authToken")?.value;
 
   const protectedPaths = [
-    "/upcoming-quizzes",
     "/ongoing-quizzes",
     "/join-quiz",
     "/user",
@@ -32,7 +31,6 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/upcoming-quizzes",
     "/ongoing-quizzes",
     "/join-quiz",
     "/user/:path*",
