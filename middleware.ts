@@ -5,28 +5,38 @@ import type { NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("authToken")?.value;
 
-  // If no token and trying to access a protected page
-  if (
-    !token &&
-    (request.nextUrl.pathname.startsWith("/upcoming-quizzes") ||
-      request.nextUrl.pathname.startsWith("/ongoing-quizzes") ||
-      request.nextUrl.pathname.startsWith("/join-quiz") ||
-      request.nextUrl.pathname.startsWith("/user/")
-    )
-  ) {
+  const protectedPaths = [
+    "/upcoming-quizzes",
+    "/ongoing-quizzess",
+    "/join-quiz",
+    "/user",
+  ];
+
+  const isProtected = protectedPaths.some((path) =>
+    request.nextUrl.pathname.startsWith(path)
+  );
+
+  // Not logged in & trying to access protected page
+  if (!token && isProtected) {
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
 
-  // If token exists and trying to visit login/register — redirect to home
+  // Logged in & trying to visit login/register
   if (token && ["/login", "/register"].includes(request.nextUrl.pathname)) {
-    const homeUrl = new URL("/", request.url);
-    return NextResponse.redirect(homeUrl);
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/ongoing-quizzess", "/upcoming-quizzes","/join-quiz", "/login", "/register","/user/:path"], // paths to protect/redirect
+  matcher: [
+    "/upcoming-quizzes",
+    "/ongoing-quizzess",
+    "/join-quiz",
+    "/user/:path*",
+    "/login",
+    "/register",
+  ],
 };

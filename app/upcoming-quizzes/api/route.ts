@@ -7,6 +7,7 @@ export async function GET() {
   try {
     const res = await fetch(`${API_BASE_URL}/upcoming-quiz`, {
       headers: { "Content-Type": "application/json" },
+       cache: "no-store",
     });
 
     if (!res.ok) {
