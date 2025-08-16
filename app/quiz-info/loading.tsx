@@ -1,7 +1,7 @@
 export default function Loading() {
   return (
-    <div className="w-screen mx-auto">
-      <div className="w-full h-72 bg-[#382e2e] animate-pulse" />
+    <div className="bg-black p-4">
+      <div className="w-full h-screen bg-[#382e2e] animate-pulse" />
     </div>
   );
 }
