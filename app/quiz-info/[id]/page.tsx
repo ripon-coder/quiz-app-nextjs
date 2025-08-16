@@ -52,7 +52,7 @@ export default async function Quizinfo({
     <div className="bg-[#000] p-3 md:p-6 text-white">
       {categories?.content?.length > 0 ? (
         <>
-          <h1 className="text-white text-3xl font-bold pb-6">
+          <h1 className="text-white text-2xl md:text-3xl font-bold pb-6">
             {categories.content[0].title}
           </h1>
           <div className="md:w-1/3 w-full h-64 relative">
