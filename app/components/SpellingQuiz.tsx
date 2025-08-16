@@ -22,7 +22,7 @@ export default function SpellingQuiz({ quizzes, quizImg }: any) {
           return languages.map((lang) => (
             <div
               key={`${category.id}-${lang}`}
-              className="flex md:flex-row flex-col gap-4 px-6 py-4"
+              className="flex md:flex-row flex-col gap-4 px-3 md:px-6 py-4"
             >
               <div className="md:w-3/12 w-full border-2 border-gray-700 rounded-sm p-2">
                 <div className="w-full h-48 relative">

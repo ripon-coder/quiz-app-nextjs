@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${poppins.variable} font-sans antialiased w-screen`}>
+      <body className={`${poppins.className} antialiased w-full`}>
         <Navbar />
         {children}
         <Footer/>

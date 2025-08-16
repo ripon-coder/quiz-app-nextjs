@@ -31,7 +31,7 @@ export default async function ongoingQuiz() {
   return (
     <>
       {onGoingQuiz?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-8 py-8 bg-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 md:px-8 py-8 bg-black">
           {onGoingQuiz.map((quiz: any) => (
             <div
               key={quiz.id}
