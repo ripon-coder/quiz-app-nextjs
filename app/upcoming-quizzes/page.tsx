@@ -13,12 +13,8 @@ export default async function UpcomingQuiz() {
   let upComingQuiz: any = [];
 
   try {
-    const res = await fetch(`${APP_URL}/upcoming-quizzes/api`, {
-      cache: "no-store", // ensures fresh data on every request
-    });
-
+    const res = await fetch(`${APP_URL}/upcoming-quizzes/api`);
     if (!res.ok) throw new Error("Failed to fetch upcoming quizzes");
-
     const quizData = await res.json();
     upComingQuiz = quizData.data;
   } catch (error) {

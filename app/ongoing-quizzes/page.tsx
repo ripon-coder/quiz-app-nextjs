@@ -3,10 +3,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { fetchOngoingQuiz } from "@/app/lib/api/OngoingQuizApi";
 import { formatDateToDDMMYYYY } from "@/app/lib/helper";
-
 const BASE_URL = process.env.NEXT_PUBLIC_URL ?? "";
-export const dynamic = "force-dynamic";
 
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Ongoing Quizzes",

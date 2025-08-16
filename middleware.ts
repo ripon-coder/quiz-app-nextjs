@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
 
   const protectedPaths = [
     "/upcoming-quizzes",
-    "/ongoing-quizzess",
+    "/ongoing-quizzes",
     "/join-quiz",
     "/user",
   ];
@@ -33,7 +33,7 @@ export function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     "/upcoming-quizzes",
-    "/ongoing-quizzess",
+    "/ongoing-quizzes",
     "/join-quiz",
     "/user/:path*",
     "/login",

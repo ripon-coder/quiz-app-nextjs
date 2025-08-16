@@ -10,7 +10,7 @@ import { useAuth } from "@/app/lib/useAuth";
 
 const MENU_ITEMS = [
   { href: "/", label: "Home" },
-  { href: "/ongoing-quizzess", label: "Ongoing Quizzes" },
+  { href: "/ongoing-quizzes", label: "Ongoing Quizzes" },
   { href: "/upcoming-quizzes", label: "Upcoming Quizzes" },
 ];
 
