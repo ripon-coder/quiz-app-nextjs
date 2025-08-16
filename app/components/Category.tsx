@@ -29,7 +29,7 @@ const Category = async () => {
         {categories.map((category: any) => (
           <div
             key={category.id}
-            className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-sm"
+            className="pt-1.5 px-3 bg-black border-2 border-gray-700 rounded-sm"
           >
             <div className="flex justify-center items-center">
               <NotebookTabs className="w-8 h-8 text-[#448AFF]" />
