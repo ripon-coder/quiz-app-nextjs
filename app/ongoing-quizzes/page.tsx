@@ -31,11 +31,11 @@ export default async function ongoingQuiz() {
   return (
     <>
       {onGoingQuiz?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 md:px-8 py-8 bg-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 md:px-4 py-8 bg-black">
           {onGoingQuiz.map((quiz: any) => (
             <div
               key={quiz.id}
-              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-sm"
+              className="pt-1.5 px-2 bg-black border-2 border-gray-700 rounded-sm"
             >
               <div className="w-full aspect-video my-4 relative">
                 {/* If you want video playback: */}

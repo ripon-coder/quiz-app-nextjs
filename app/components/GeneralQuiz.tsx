@@ -24,7 +24,7 @@ export default function GeneralQuiz({ quizzes, quizImg }: any) {
               key={`${category.id}-${lang}`}
               className="flex md:flex-row flex-col gap-4 px-3 md:px-6 py-4"
             >
-              <div className="md:w-3/12 w-full border-2 border-gray-700 rounded-sm p-2">
+              <div className="md:w-4/12 w-full border-2 border-gray-700 rounded-sm p-2">
                 <div className="w-full h-48 relative">
                   <Image
                     src={`${BASE_URL}/homeImg/${quizImg.img}`}
@@ -97,7 +97,7 @@ export default function GeneralQuiz({ quizzes, quizImg }: any) {
                   </div>
                 </div>
               </div>
-              <div className="md:w-9/12 w-full">
+              <div className="md:w-8/12 w-full">
                 <h2 className="bg-[#0736bb] block md:p-2 p-1 px-2 md:text-xl">
                   About The Quiz
                 </h2>

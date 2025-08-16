@@ -76,11 +76,11 @@ export default async function Quizinfo({
       </div>
 
       {categories?.recent_finish?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-0 md:px-8 py-8 bg-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-0 md:px-2 py-8 bg-black">
           {categories.recent_finish.map((category: any) => (
             <div
               key={category.id}
-              className="pt-1.5 px-4 bg-black border-2 border-gray-700 rounded-sm"
+              className="pt-1.5 px-2 bg-black border-2 border-gray-700 rounded-sm"
             >
               <div className="w-full aspect-video my-4">
                 {categories.content[0].video ? (
