@@ -67,7 +67,7 @@ const Category = async () => {
         ))}
       </div>
       <div className="bg-[#000] flex justify-center gap-4 pb-10 pt-2">
-        <Link href="ongoing-quizzess"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
+        <Link href="ongoing-quizzes"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
 ">All ongoing Quiz</button></Link>
         <Link href="upcoming-quizzes"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
 ">Upcoming Quiz</button></Link>

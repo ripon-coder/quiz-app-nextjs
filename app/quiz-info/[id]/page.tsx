@@ -49,7 +49,7 @@ export default async function Quizinfo({
     console.error("Failed to fetch categories:", error);
   }
   return (
-    <div className="bg-[#000] p-6 text-white">
+    <div className="bg-[#000] p-3 md:p-6 text-white">
       {categories?.content?.length > 0 ? (
         <>
           <h1 className="text-white text-3xl font-bold pb-6">
@@ -76,7 +76,7 @@ export default async function Quizinfo({
       </div>
 
       {categories?.recent_finish?.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-8 py-8 bg-black">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-1 md:px-8 py-8 bg-black">
           {categories.recent_finish.map((category: any) => (
             <div
               key={category.id}
