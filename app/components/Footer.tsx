@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export default function Footer() {
     return (
         <>
@@ -7,7 +9,7 @@ export default function Footer() {
                         About Us
                     </h1>
                     <ul className="text-sm pt-7">
-                        <li>About Us</li>
+                        <Link href="/about-us"><li>About Us</li></Link>
                         <li className="pt-3">Terms and Conditions</li>
                         <li className="pt-3">Privacy Policy</li>
                     </ul>
