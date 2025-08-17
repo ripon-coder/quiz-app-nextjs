@@ -20,9 +20,9 @@ export default function Footer() {
                     Help & support
                     </h1>
                     <ul className="text-sm pt-7 ">
-                        <li>About Us</li>
-                        <li className="pt-3">Terms and Conditions</li>
-                        <li className="pt-3">Privacy Policy</li>
+                        <li className="">FAQ</li>
+                        <li className="pt-3">Contact Us</li>
+                        <li className="pt-3"></li>
                     </ul>
                 </div>
                 <div className="md:w-1/4 text-white text-center mt-8 md:mt-0">
@@ -30,9 +30,8 @@ export default function Footer() {
                     Quick Links
                     </h1>
                     <ul className="text-sm pt-7">
-                        <li>About Us</li>
-                        <li className="pt-3">Terms and Conditions</li>
-                        <li className="pt-3">Privacy Policy</li>
+                        <li className="">Login</li>
+                        <li className="pt-3">Register</li>
                     </ul>
                 </div>
                 <div className="md:w-1/4 text-white text-center mt-8 md:mt-0">
