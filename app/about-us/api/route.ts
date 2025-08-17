@@ -7,7 +7,7 @@ export async function GET() {
   try {
     const res = await fetch(`${API_BASE_URL}/page/about-us`, {
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 10 }
+      next: { revalidate: 3600 }
     });
 
     if (!res.ok) {
