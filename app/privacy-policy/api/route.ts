@@ -5,13 +5,13 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 export async function GET() {
   try {
-    const res = await fetch(`${API_BASE_URL}/page/about-us`, {
+    const res = await fetch(`${API_BASE_URL}/page/terms-conditon`, {
       headers: { "Content-Type": "application/json" },
       next: { revalidate: 3600 }
     });
 
     if (!res.ok) {
-      throw new Error("Failed to fetch about us");
+      throw new Error("Failed to fetch terms and conditions data");
     }
     const data = await res.json();
     return NextResponse.json(data);
