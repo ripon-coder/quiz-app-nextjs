@@ -88,7 +88,7 @@ export default function GeneralQuiz({ quizzes, quizImg }: any) {
                   </ul>
                   <div className="flex justify-center">
                     <Link
-                      href=""
+                      href={`/start-quiz?quiz_id=${category.id}&status=${category.status}&book_id=${category.book_id ? category.book_id : ""}&lang=${lang}`}
                     >
                       <button className="bg-[#3572db] px-3 py-2 my-4 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm">
                         Start Quiz
