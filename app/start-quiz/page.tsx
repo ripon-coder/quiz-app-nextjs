@@ -1,6 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { time } from "console";
 
 interface OptionType {
   id: number;
@@ -13,7 +15,7 @@ interface QuestionType {
   variation_id: number;
   quesNumber: number;
   question: string;
-  answer: string;
+  answer: any;
   options: OptionType[];
   time?: number;
 }
@@ -26,17 +28,21 @@ export default function Quiz() {
   const lang = searchParams.get("lang") || "";
 
   const [questionData, setQuestionData] = useState<QuestionType | null>(null);
-  const [currentNumber, setCurrentNumber] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
-  const [result, setResut] = useState<any>(null);
-  const [timeLeft, setTimeLeft] = useState(60);
+  const [examStatus, setExamStatus] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(6);
+  const [isLoading, setIsLoading] = useState(false);
+  const [quizStarted, setQuizStarted] = useState(false);
+  const [resultStore, setResultStore] = useState<any>(null);
 
-  // Load first question
-  const fetchStartQuiz = async () => {
+  // Initialize the quiz
+  const startQuiz = async () => {
     try {
+      setIsLoading(true);
       const res = await fetch("/start-quiz/quiz-start-api", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,83 +55,106 @@ export default function Quiz() {
       });
 
       const data = await res.json();
+      setExamStatus(data?.message || null);
+
       if (data?.data?.question) {
-        setCurrentNumber(0);
+        setQuizStarted(true);
+        setCurrentQuestionIndex(0);
         setScore(0);
         setShowResult(false);
-        loadQuestion(data);
+        loadQuestion(data, currentQuestionIndex);
       } else {
         setShowResult(true);
       }
     } catch (err) {
       console.error(err);
-      setShowResult(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Load next question
-  const fetchNextQuiz = async () => {
+  // Helper to create API request body
+  const createRequestBody = (
+    questionId?: number,
+    variationId?: number,
+    quesNumber?: number,
+    includeAnswer = false
+  ) => ({
+    quiz_id: Number(quizId),
+    status: Number(status),
+    book_id: bookId ? Number(bookId) : null,
+    lang,
+    ...(questionId && { questionId }),
+    ...(variationId && { variation_id: variationId }),
+    ...(quesNumber !== undefined && { quesNumber }),
+    ...(includeAnswer && { answer: selectedOption || "" }),
+  });
+
+  const loadNextQuestion = async () => {
+    if (!questionData) return;
     try {
+      setIsLoading(true);
       const res = await fetch("/start-quiz/quiz-next-api", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          quiz_id: Number(quizId),
-          variation_id: questionData?.variation_id,
-          questionId: questionData?.id,
-          status: Number(status),
-          book_id: bookId ? Number(bookId) : null,
-          lang,
-          answer: selected,
-          quesNumber: currentNumber + 1, // next question number
-        }),
+        body: JSON.stringify(
+          createRequestBody(
+            questionData.id,
+            questionData.variation_id,
+            currentQuestionIndex + 1,
+            true // include answer only for next-question API
+          )
+        ),
       });
-
-      if (!res.ok) return;
 
       const data = await res.json();
 
-      if (data?.data?.question) {
-        loadQuestion(data);
-        setCurrentNumber((prev) => prev + 1);
+      if (data?.data?.result_done) {
+        setResultStore(data.data);
+        setShowResult(true);
+      } else if (data?.data?.question) {
+        const nextIndex = currentQuestionIndex + 1;
+        setCurrentQuestionIndex(nextIndex);
+        loadQuestion(data, nextIndex);
       } else {
-        setShowResult(true); // finished
-        setResut(data.data);
+        console.warn("No question returned from API.");
       }
     } catch (err) {
       console.error(err);
-      setShowResult(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const loadQuestion = (data: any) => {
+  const loadQuestion = (data: any, questionIndex: number) => {
+    if (!data?.data?.question) {
+      setQuestionData(null);
+      setShowResult(true);
+      return;
+    }
+
     const q = data.data.question;
     setQuestionData({
-      id: q.id,
+      id: q.id || null,
       variation_id: q.variation_id,
-      quesNumber: currentNumber,
+      quesNumber: questionIndex,
       question: q.question,
-      answer: q.answer,
+      answer: q.answer || null,
       options: q.options || [],
-      time: 60,
     });
     setTotalQuestions(data.data.total_question || 0);
-    setSelected(null);
-    setTimeLeft(60);
+    setSelectedOption(null);
+    setTimeLeft(6);
   };
 
+  // Timer effect
   useEffect(() => {
-    fetchStartQuiz();
-  }, [quizId]);
-
-  useEffect(() => {
-    if (!questionData || showResult) return;
+    if (!quizStarted || showResult || !questionData) return; // add questionData check
 
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
-          clearInterval(timer);
-          handleNext();
+          handleQuestionProgression();
           return 0;
         }
         return prev - 1;
@@ -133,91 +162,181 @@ export default function Quiz() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [questionData, showResult]);
+  }, [quizStarted, showResult, currentQuestionIndex, questionData]);
 
-  const handleOptionClick = (opt: string) => setSelected(opt);
-
-  const handleNext = async () => {
-    if (selected === questionData?.answer) setScore((prev) => prev + 1);
-
-    if (currentNumber >= totalQuestions) {
-      setShowResult(true);
-      return;
+  const handleOptionSelect = (option: string) => {
+    if (!isLoading) {
+      setSelectedOption(option);
     }
-    await fetchNextQuiz();
   };
 
+  const handleQuestionProgression = async () => {
+    if (!questionData) return;
+    if (selectedOption === questionData?.answer) {
+      setScore((prev) => prev + 1);
+    }
+    await loadNextQuestion();
+  };
+
+  const handleNextClick = async () => {
+    await handleQuestionProgression();
+  };
+
+  useEffect(() => {
+    startQuiz();
+  }, [quizId]);
+
+  const maxTime = questionData?.time ?? 10;
+  let color = timeLeft > maxTime / 2 ? "text-green-500" : "text-red-500";
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white p-4 py-8">
-      <div className="w-full max-w-2xl bg-gray-800 rounded-lg shadow-md p-6">
-        {!showResult && questionData ? (
-          <>
-            <div className="mb-4">
-              <h1 className="text-xl font-semibold m-2">
-                Q{currentNumber + 1}. {questionData.question}
-              </h1>
-              <p className="text-sm text-gray-300 m-2">
-                Time Left:{" "}
-                <span>{timeLeft < 10 ? `0${timeLeft}` : timeLeft}</span>s
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-4">
-              {questionData.options.map((opt) => (
-                <button
-                  key={opt.id}
-                  onClick={() => handleOptionClick(opt.option)}
-                  className={`text-left px-4 py-3 my-1 mx-1 rounded border border-gray-600 hover:bg-blue-600 transition-colors cursor-pointer ${
-                    selected === opt.option ? "bg-blue-500" : "bg-gray-700"
-                  }`}
-                >
-                  {opt.option}
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={handleNext}
-              className="bg-green-600 px-4 py-2 m-1 rounded hover:bg-green-700 transition-colors cursor-pointer"
-            >
-              {currentNumber + 1 === totalQuestions ? "Finish" : "Next"}
-            </button>
-          </>
-        ) : (
-          <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-            <div className="bg-gray-800 rounded-lg shadow-lg p-8 max-w-xl w-full text-center space-y-6">
-              <h2 className="text-3xl font-bold text-green-400">
-                🎉 Congratulations! 🎉
-              </h2>
-              <p className="text-gray-300 text-lg font-semibold">
-                {result.quiz.title}
-              </p>
-
-              <div className="flex justify-around mt-4">
-                <div className="bg-green-600 rounded-lg px-4 py-2 w-28">
-                  <p className="text-white font-semibold">Right</p>
-                  <p className="text-white text-xl">{result.result.total_right_ans}</p>
+    <div className="flex items-center justify-center bg-black text-white p-4 py-8">
+      <div className="w-full max-w-2xl bg-gray-800 p-6 ">
+        {quizStarted ? (
+          !showResult && questionData ? (
+            <>
+              <div className="mb-6">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm text-gray-300">
+                    Question {currentQuestionIndex + 1} of {totalQuestions}
+                  </span>
+                  <span className="text-sm font-medium px-3 py-1 bg-gray-700 rounded-full">
+                    <div className="flex items-center space-x-2">
+                      <div className="h-3 w-3 rounded-full bg-red-500 animate-pulse"></div>
+                      <span
+                        className={`text-2xl font-mono font-semibold drop-shadow-md ${color}`}
+                      >
+                        <span className="inline-block w-8 text-center">
+                          {timeLeft < 10 ? `0${timeLeft}` : timeLeft}
+                        </span>
+                        <span className="text-sm ml-1 opacity-80">seconds</span>
+                      </span>
+                    </div>
+                  </span>
                 </div>
-                <div className="bg-red-600 rounded-lg px-4 py-2 w-28">
-                  <p className="text-white font-semibold">Wrong</p>
-                  <p className="text-white text-xl">{result.result.total_worng_ans}</p>
-                </div>
+                <h2 className="text-xl font-semibold">
+                  {questionData.question}
+                </h2>
               </div>
 
-              <p className="text-yellow-400 text-2xl font-bold mt-4">
-                Total Mark: {result.total_mark} / {result.total_quistion}
-              </p>
+              <div className="grid grid-rows-1 md:grid-cols-2 gap-3 mb-6">
+                {questionData.options.map((option) => (
+                  <button
+                    key={option.id}
+                    onClick={() => handleOptionSelect(option.option)}
+                    disabled={isLoading}
+                    className={`p-4 text-left  border transition-all ${
+                      selectedOption === option.option
+                        ? "bg-blue-600 border-blue-600"
+                        : "bg-gray-700 border-gray-600 hover:bg-gray-600"
+                    } ${
+                      isLoading
+                        ? "opacity-50 cursor-not-allowed"
+                        : "cursor-pointer"
+                    }`}
+                  >
+                    {option.option}
+                  </button>
+                ))}
+              </div>
 
-              <p className="text-gray-300 mt-2">
-                {result.quiz.price
-                  ? `You may get prize money: $${result.result.price}`
-                  : "No prize money for this quiz."}
-              </p>
+              <div className="flex justify-end">
+                <button
+                  onClick={handleNextClick}
+                  disabled={isLoading}
+                  className={`px-6 py-2  font-medium ${
+                    isLoading
+                      ? "bg-gray-600 cursor-not-allowed"
+                      : "bg-green-600 hover:bg-green-700 cursor-pointer"
+                  }`}
+                >
+                  {isLoading
+                    ? "Loading..."
+                    : currentQuestionIndex + 1 === totalQuestions
+                    ? "Finish Quiz"
+                    : "Next Question"}
+                </button>
+              </div>
+            </>
+          ) : showResult ? (
+            <div className="text-center">
+              {resultStore ? (
+                <div className="max-w-sm mx-auto p-6  rounded-lg  text-white">
+                  <h2 className="text-2xl font-semibold mb-6">
+                    Quiz Completed!
+                  </h2>
 
-              <p className="text-gray-300 text-sm">
-                If you win any prize for this quiz, we will confirm you. Thanks!
-              </p>
+                  <div className="space-y-4 text-left">
+                    <div className="flex justify-between">
+                      <span>Total Questions</span>
+                      <span>{resultStore.quiz.total_quistion}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-green-600">
+                      <div className="flex items-center space-x-1">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                        <span>Correct Answers</span>
+                      </div>
+                      <span>{resultStore.result.total_right_ans}</span>
+                    </div>
+
+                    <div className="flex justify-between items-center text-red-600">
+                      <div className="flex items-center space-x-1">
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                        <span>Wrong Answers</span>
+                      </div>
+                      <span>{resultStore.result.total_worng_ans}</span>
+                    </div>
+                  </div>
+
+                  <div className="mt-6">
+                    <Link href="/user/quiz-scores">
+                      <button className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors text-sm cursor-pointer">
+                        View All Quiz Results
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+              ) : (
+                <p>No results available.</p>
+              )}
             </div>
+          ) : (
+            <div className="text-center py-8">
+              <p>Loading questions...</p>
+            </div>
+          )
+        ) : (
+          <div className="flex justify-center items-center bg-gray-800 p-4">
+            <p className="text-white text-lg font-medium animate-pulse">
+              {examStatus ? "Exam already completed." : "Preparing quiz..."}
+            </p>
           </div>
         )}
       </div>
