@@ -93,7 +93,7 @@ export default function QuizScoresPage() {
                     </td>
                     <td className="px-3 py-2 border-b text-sm text-green-400">{row.total_right_ans}</td>
                     <td className="px-3 py-2 border-b text-sm text-red-400">{row.total_worng_ans}</td>
-                    <td className="px-3 py-2 border-b text-sm text-white">{row.mark}</td>
+                    <td className="px-3 py-2 border-b text-sm text-white">{row.total_mark}</td>
                     <td className="px-3 py-2 border-b text-sm text-white">{row.total_mark*row.mark}</td>
                     <td className="px-3 py-2 border-b text-sm text-white">{row.position ?? ""}</td>
                     <td className="px-3 py-2 border-b text-sm text-yellow-400">${row.aword ?? "0.00"}</td>
