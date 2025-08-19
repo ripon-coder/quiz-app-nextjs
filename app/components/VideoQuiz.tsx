@@ -118,16 +118,16 @@ export default function VideoQuiz({ quizzes, quizImg }: any) {
 
       {modalOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
           onClick={closeModal}
         >
           <div
-            className="bg-white w-full max-w-5xl h-[90vh] relative flex flex-col"
+            className="bg-white w-full max-w-3xl md:max-w-5xl h-auto  overflow-hidden  flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close button */}
             <button
-              className="absolute top-1 right-1 text-black font-bold text-3xl px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none shadow-md cursor-pointer"
+              className="absolute top-3 right-3 text-black font-bold text-2xl px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none shadow-md cursor-pointer"
               onClick={closeModal}
               aria-label="Close modal"
             >
@@ -135,10 +135,10 @@ export default function VideoQuiz({ quizzes, quizImg }: any) {
             </button>
 
             {/* Video area */}
-            <div className="flex-grow">
+            <div className="relative w-full aspect-video">
               <iframe
                 src={getYoutubeEmbedUrl(video) || ""}
-                className="w-full h-full"
+                className="absolute inset-0 w-full h-full"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -147,11 +147,11 @@ export default function VideoQuiz({ quizzes, quizImg }: any) {
             </div>
 
             {/* Bottom bar */}
-            <div className=" p-2 bg-white/80 flex justify-center items-center gap-2 flex-shrink-0">
-              <p className="text-black text-sm font-bold">
+            <div className="p-1 bg-white/90 flex justify-center items-center gap-3 flex-shrink-0">
+              <p className="text-black text-sm font-semibold">
                 Are You Ready To Start Quiz?
               </p>
-              <button className="bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700">
+              <button className="bg-blue-600 text-white px-3 py-1 text-sm hover:bg-blue-700 transition cursor-pointer">
                 Start Quiz
               </button>
             </div>
