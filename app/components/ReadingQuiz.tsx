@@ -8,7 +8,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_URL ?? "";
 
 export default function ReadingQuiz({ quizzes, quizImg }: any) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [book, setBook] = useState<string | null>(null);
+  const [book, setBook] = useState<any | null>(null);
   // Open modal and set PDF url
   function openModal(bookData: any) {
     // setPdfUrl(`${BASE_URL}/books/${pdfPath}`);
