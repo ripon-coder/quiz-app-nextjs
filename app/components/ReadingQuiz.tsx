@@ -139,7 +139,7 @@ export default function ReadingQuiz({ quizzes, quizImg }: any) {
             </button>
 
             <iframe
-              src={`${BASE_URL}/books/${book.book}`!}
+              src={`${BASE_URL}/books/${book.book}`}
               className="flex-grow w-full min-h-0"
               frameBorder="0"
               title="Book PDF"
