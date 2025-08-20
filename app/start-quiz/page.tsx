@@ -34,7 +34,7 @@ export default function Quiz() {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [examStatus, setExamStatus] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(6);
+  const [timeLeft, setTimeLeft] = useState(60);
   const [isLoading, setIsLoading] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
   const [resultStore, setResultStore] = useState<any>(null);
@@ -148,7 +148,7 @@ export default function Quiz() {
     });
     setTotalQuestions(data.data.total_question || 0);
     setSelectedOption(null);
-    setTimeLeft(6);
+    setTimeLeft(60);
   };
 
   // Timer effect
