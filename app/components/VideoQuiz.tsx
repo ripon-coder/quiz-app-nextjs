@@ -7,22 +7,24 @@ import {
   stripHtml,
   getYoutubeEmbedUrl,
 } from "@/app/lib/helper";
+import Link  from "next/link";
 
 const BASE_URL = process.env.NEXT_PUBLIC_URL ?? "";
 
 export default function VideoQuiz({ quizzes, quizImg }: any) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [video, setVideo] = useState("");
+  const [video, setVideo] = useState<any>(null); // for single object
+
   // Open modal and set PDF url
-  function openModal(video: string) {
+  function openModal(videoData: any) {
     setModalOpen(true);
-    setVideo(video);
+    setVideo(videoData);
   }
 
   // Close modal
   function closeModal() {
     setModalOpen(false);
-    setVideo("");
+    setVideo(null);
   }
 
   if (quizzes.length === 0) return <h1>No quizzes found</h1>;
@@ -99,7 +101,7 @@ export default function VideoQuiz({ quizzes, quizImg }: any) {
               </ul>
               <div className="flex justify-center">
                 <button
-                  onClick={() => openModal(video.video)} // make sure video.pdf_path exists and is the PDF URL
+                  onClick={() => openModal(video)} // make sure video.pdf_path exists and is the PDF URL
                   className="bg-[#3572db] px-3 py-2 my-4 text-white rounded-sm cursor-pointer hover:bg-[#50678f] text-sm"
                 >
                   Watch video
@@ -122,22 +124,24 @@ export default function VideoQuiz({ quizzes, quizImg }: any) {
           onClick={closeModal}
         >
           <div
-            className="bg-white w-full max-w-3xl md:max-w-5xl h-auto  overflow-hidden  flex flex-col"
+            className="bg-white w-full max-w-3xl md:max-w-5xl h-auto overflow-hidden flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Close button */}
-            <button
-              className="absolute top-3 right-3 text-black font-bold text-2xl px-3 py-1 bg-gray-200 rounded-full hover:bg-gray-300 focus:outline-none shadow-md cursor-pointer"
-              onClick={closeModal}
-              aria-label="Close modal"
-            >
-              &times;
-            </button>
-
             {/* Video area */}
             <div className="relative w-full aspect-video">
+              {/* Close button inside video corner */}
+              <button
+                onClick={closeModal}
+                aria-label="Close modal"
+                className="absolute top-2 right-2 w-10 h-10 flex items-center justify-center 
+                   text-black font-bold text-xl rounded-full bg-white/60
+                   hover:bg-white focus:outline-none transition z-10 hover:cursor-pointer"
+              >
+                &times;
+              </button>
+
               <iframe
-                src={getYoutubeEmbedUrl(video) || ""}
+                src={getYoutubeEmbedUrl(video.video) || ""}
                 className="absolute inset-0 w-full h-full"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -147,13 +151,19 @@ export default function VideoQuiz({ quizzes, quizImg }: any) {
             </div>
 
             {/* Bottom bar */}
-            <div className="p-1 bg-white/90 flex justify-center items-center gap-3 flex-shrink-0">
+            <div className="p-2 bg-white/90 flex justify-center items-center gap-3 flex-shrink-0">
               <p className="text-black text-sm font-semibold">
                 Are You Ready To Start Quiz?
               </p>
-              <button className="bg-blue-600 text-white px-3 py-1 text-sm hover:bg-blue-700 transition cursor-pointer">
-                Start Quiz
-              </button>
+              <Link
+                href={`/start-quiz?quiz_id=${video.quiz_id}&status=4&book_id=${
+                  video.id ? video.id : ""
+                }&lang=${video.language}`}
+              >
+                <button className="bg-blue-600 text-white px-3 py-1 text-sm hover:bg-blue-700 transition cursor-pointer">
+                  Start Quiz
+                </button>
+              </Link>
             </div>
           </div>
         </div>

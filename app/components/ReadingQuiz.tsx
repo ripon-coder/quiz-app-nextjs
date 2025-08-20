@@ -3,22 +3,22 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { formatDateToDDMMYYYY, stripHtml } from "@/app/lib/helper";
-
+import Link from "next/link";
 const BASE_URL = process.env.NEXT_PUBLIC_URL ?? "";
 
 export default function ReadingQuiz({ quizzes, quizImg }: any) {
   const [modalOpen, setModalOpen] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  const [book, setBook] = useState<string | null>(null);
   // Open modal and set PDF url
-  function openModal(pdfPath: string) {
-    setPdfUrl(`${BASE_URL}/books/${pdfPath}`);
+  function openModal(bookData: any) {
+    // setPdfUrl(`${BASE_URL}/books/${pdfPath}`);
+    setBook(bookData);
     setModalOpen(true);
   }
-
   // Close modal
   function closeModal() {
     setModalOpen(false);
-    setPdfUrl(null);
+    setBook(null);
   }
 
   if (quizzes.length === 0) return <h1>No quizzes found</h1>;
@@ -95,7 +95,7 @@ export default function ReadingQuiz({ quizzes, quizImg }: any) {
               </ul>
               <div className="flex justify-center">
                 <button
-                  onClick={() => openModal(book.book)} // make sure book.pdf_path exists and is the PDF URL
+                  onClick={() => openModal(book)} // make sure book.pdf_path exists and is the PDF URL
                   className="bg-[#3572db] px-3 py-2 my-4 text-white rounded-sm cursor-pointer hover:bg-[#50678f] text-sm"
                 >
                   Read Book
@@ -112,7 +112,7 @@ export default function ReadingQuiz({ quizzes, quizImg }: any) {
         ))
       )}
 
-      {modalOpen && (
+      {modalOpen && book && (
         <div
           className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
           onClick={closeModal}
@@ -139,7 +139,7 @@ export default function ReadingQuiz({ quizzes, quizImg }: any) {
             </button>
 
             <iframe
-              src={pdfUrl!}
+              src={`${BASE_URL}/books/${book.book}`!}
               className="flex-grow w-full min-h-0"
               frameBorder="0"
               title="Book PDF"
@@ -149,9 +149,15 @@ export default function ReadingQuiz({ quizzes, quizImg }: any) {
               <p className="block text-black text-sm font-bold">
                 Are You Ready To Start Quiz?
               </p>
-              <button className="bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700 inline-block cursor-pointer">
-                Start Quiz
-              </button>
+              <Link
+                href={`/start-quiz?quiz_id=${book?.quiz_id || ""}&status=3&book_id=${
+                  book.id ? book.id : ""
+                }&lang=${book?.language || ""}`}
+              >
+                <button className="bg-blue-600 text-white px-2 py-1 text-sm rounded hover:bg-blue-700 inline-block cursor-pointer">
+                  Start Quiz
+                </button>
+              </Link>
             </div>
           </div>
         </div>

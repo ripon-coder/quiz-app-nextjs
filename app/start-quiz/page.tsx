@@ -38,6 +38,7 @@ export default function Quiz() {
   const [isLoading, setIsLoading] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
   const [resultStore, setResultStore] = useState<any>(null);
+  const [isQuestionLoading, setIsQuestionLoading] = useState(false);
 
   // Initialize the quiz
   const startQuiz = async () => {
@@ -53,8 +54,11 @@ export default function Quiz() {
           lang,
         }),
       });
-
+      if (!res.ok) {
+        throw new Error("Failed to start quiz");
+      }
       const data = await res.json();
+
       setExamStatus(data?.message || null);
 
       if (data?.data?.question) {
@@ -171,11 +175,16 @@ export default function Quiz() {
   };
 
   const handleQuestionProgression = async () => {
-    if (!questionData) return;
+    if (!questionData || isQuestionLoading) return;
+    setIsQuestionLoading(true);
+
     if (selectedOption === questionData?.answer) {
       setScore((prev) => prev + 1);
     }
     await loadNextQuestion();
+
+    setIsQuestionLoading(false);
+    setSelectedOption(null);
   };
 
   const handleNextClick = async () => {
