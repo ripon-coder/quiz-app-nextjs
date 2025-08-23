@@ -1,6 +1,6 @@
 import Link from "next/link";
 import apple from "@/public/apple.png";
-import google from "@/public/google1.png";
+import google from "@/public/google.png";
 import Image from "next/image";
 import { Facebook, Twitter, Youtube, Instagram } from "lucide-react";
 
