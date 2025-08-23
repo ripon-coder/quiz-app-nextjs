@@ -33,7 +33,9 @@ export default function Footer() {
             <Link href="/faq">
               <li className="">FAQ</li>
             </Link>
+            <Link href="/contact-us">
             <li className="pt-3">Contact Us</li>
+            </Link>
             <li className="pt-3"></li>
           </ul>
         </div>

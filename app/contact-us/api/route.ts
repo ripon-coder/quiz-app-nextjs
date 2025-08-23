@@ -7,6 +7,7 @@ export async function GET(request: Request) {
     const res = await fetch(`${API_BASE_URL}/page/contact-us`, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
+      next:{revalidate:3600}
     });
 
     const data = await res.json();
