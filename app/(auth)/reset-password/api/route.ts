@@ -6,11 +6,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 export async function POST(request: Request) {
     
   try {
-    const registerData = await request.json();
-    const res = await fetch(`${API_BASE_URL}/register`, {
+    const emailData = await request.json();
+    const res = await fetch(`${API_BASE_URL}/new-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(registerData),
+      body: JSON.stringify(emailData),
     });
     
     const data = await res.json();

@@ -20,7 +20,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Logged in & trying to visit login/register
-  if (token && ["/login", "/register"].includes(request.nextUrl.pathname)) {
+  if (token && ["/login", "/register","/forgot-password"].includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -32,5 +32,6 @@ export const config = {
     "/join-quiz",
     "/login",
     "/register",
+    "/forgot-password"
   ],
 };
