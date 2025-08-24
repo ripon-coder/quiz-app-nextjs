@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function ContactUs() {
   const payload = {
-    name: "ripon",
+    name: "",
     phone: "",
     email: "",
     subject: "",
@@ -45,6 +45,7 @@ export default function ContactUs() {
       }
 
       if (data.success) {
+        setValue(payload);
         setLoading(false);
         setSuccessMsg("Message Sent Successfully!");
       } else {
