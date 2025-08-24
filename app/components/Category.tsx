@@ -22,7 +22,7 @@ const Category = async () => {
       </div>
     );
   }
-
+  console.log(categories);
   return (
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2 md:px-8 py-8 bg-black">
@@ -37,14 +37,18 @@ const Category = async () => {
             <h1 className="text-white text-center py-4 text-lg font-bold">
               {category.title}
             </h1>
-            <p className="text-white text-sm">{truncateText(stripHtml(category.content), 300)}</p>
+            <p className="text-white text-sm">
+              {truncateText(stripHtml(category.content), 300)}
+            </p>
 
             <div className="w-full aspect-video my-4">
               {category.video ? (
                 <div
                   className="w-full h-full"
                   dangerouslySetInnerHTML={{
-                    __html: category.video.replace(/width="\d+"/, 'width="100%"').replace(/height="\d+"/, 'height="100%"'),
+                    __html: category.video
+                      .replace(/width="\d+"/, 'width="100%"')
+                      .replace(/height="\d+"/, 'height="100%"'),
                   }}
                 />
               ) : (
@@ -60,20 +64,38 @@ const Category = async () => {
             </div>
 
             <div className="flex justify-center gap-4 my-4">
-              <Link href={`/quiz-info/${category.id}`}><button className="quiz-btn">Quiz Info</button></Link>
-              <button className="quiz-btn">Get Started</button>
+              <Link href={`/quiz-info/${category.id}`}>
+                <button className="quiz-btn">Quiz Info</button>
+              </Link>
+              <Link href={`/get-started?status=${category.id}`}>
+                <button className="quiz-btn">Get Started</button>
+              </Link>
             </div>
           </div>
         ))}
       </div>
       <div className="bg-[#000] flex justify-center gap-4 pb-10 pt-2">
-        <Link href="ongoing-quizzes"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
-">All ongoing Quiz</button></Link>
-        <Link href="upcoming-quizzes"><button className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
-">Upcoming Quiz</button></Link>
+        <Link href="ongoing-quizzes">
+          <button
+            className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
+"
+          >
+            All ongoing Quiz
+          </button>
+        </Link>
+        <Link href="upcoming-quizzes">
+          <button
+            className="bg-[#3572db] px-3 py-2 text-white rounded-xs cursor-pointer hover:bg-[#50678f] text-sm uppercase
+"
+          >
+            Upcoming Quiz
+          </button>
+        </Link>
       </div>
     </>
   );
 };
 
 export default Category;
+
+// https://nextjs-learn-zlmn.vercel.app/join-quiz?id=40&status=2
