@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function OtpVerify() {
   const router = useRouter();
@@ -99,9 +100,9 @@ export default function OtpVerify() {
 
         <div className="mt-6 text-center text-gray-400 text-sm">
           Didn’t get the code?{" "}
-          <a href="/forgot-password" className="text-blue-500 hover:underline">
+          <Link href="/forgot-password" className="text-blue-500 hover:underline">
             Resend OTP
-          </a>
+          </Link>
         </div>
       </div>
     </div>
