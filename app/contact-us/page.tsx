@@ -68,41 +68,51 @@ export default async function ContactUs() {
                   More Information
                 </h2>
                 <div className="flex justify-center md:justify-start gap-3 w-full">
-                  <li>
-                    <Image
-                      src={facebook}
-                      alt="facebook"
-                      className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
-                    />
-                  </li>
-                  <li>
-                    <Image
-                      src={instragram}
-                      alt="instragram"
-                      className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
-                    />
-                  </li>
-                  <li>
-                    <Image
-                      src={twitter}
-                      alt="twitter"
-                      className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
-                    />
-                  </li>
-                  <li>
-                    <Image
-                      src={pinterest}
-                      alt="pinterest"
-                      className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
-                    />
-                  </li>
-                  <li>
-                    <Image
-                      src={youtube}
-                      alt="pinterest"
-                      className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
-                    />
-                  </li>
+                  <a href={storeData[0].fb}>
+                    <li>
+                      <Image
+                        src={facebook}
+                        alt="facebook"
+                        className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
+                      />
+                    </li>
+                  </a>
+                  <a href={storeData[0].ins}>
+                    <li>
+                      <Image
+                        src={instragram}
+                        alt="instragram"
+                        className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
+                      />
+                    </li>
+                  </a>
+                  <a href={storeData[0].tw}>
+                    <li>
+                      <Image
+                        src={twitter}
+                        alt="twitter"
+                        className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
+                      />
+                    </li>
+                  </a>
+                  <a href={storeData[0].pnt}>
+                    <li>
+                      <Image
+                        src={pinterest}
+                        alt="pinterest"
+                        className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
+                      />
+                    </li>
+                  </a>
+                  <a href={storeData[0].yt}>
+                    <li>
+                      <Image
+                        src={youtube}
+                        alt="pinterest"
+                        className="w-10 h-10 rounded hover:bg-amber-200 hover:cursor-pointer hover:transition hover:delay-100 hover:scale-120"
+                      />
+                    </li>
+                  </a>
                 </div>
               </>
             )}
