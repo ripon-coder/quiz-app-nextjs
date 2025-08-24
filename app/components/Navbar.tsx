@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Menu, X } from "lucide-react";
 import logo from "@/public/logo.png";
-import { useRouter } from "next/navigation";
+import { useRouter,usePathname } from "next/navigation";
 import { useAuth } from "@/app/lib/useAuth";
 
 const MENU_ITEMS = [
@@ -15,6 +15,8 @@ const MENU_ITEMS = [
 ];
 
 const Navbar: React.FC = () => {
+  const pathName = usePathname();
+
   const { isLoggedIn, logout } = useAuth();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -36,7 +38,7 @@ const Navbar: React.FC = () => {
         <ul className="hidden md:flex space-x-6">
           {MENU_ITEMS.map(({ href, label }) => (
             <li key={href}>
-              <Link href={href} className="hover:text-gray-300">
+              <Link href={href} className={`hover:text-gray-300 ${pathName == href ? 'text-blue-600' :''}`}>
                 {label}
               </Link>
             </li>
@@ -45,12 +47,12 @@ const Navbar: React.FC = () => {
           {!isLoggedIn ? (
             <>
               <li>
-                <Link href="/register" className="hover:text-gray-300">
+                <Link href="/register" className={`hover:text-gray-300 ${pathName == `/register` ? `text-blue-600` : ``}`}>
                   Register
                 </Link>
               </li>
               <li>
-                <Link href="/login" className="hover:text-gray-300">
+                <Link href="/login" className={`hover:text-gray-300 ${pathName == `/login` ? `text-blue-600` : ``}`}>
                   Login
                 </Link>
               </li>
@@ -58,7 +60,7 @@ const Navbar: React.FC = () => {
           ) : (
             <>
               <li>
-                <Link href="/user/profile" className="hover:text-gray-300">
+                <Link href="/user/profile" className={`hover:text-gray-300 ${pathName.startsWith("/user") ? 'text-blue-600' :''}`}>
                   Profile
                 </Link>
               </li>

@@ -31,7 +31,6 @@ export default async function ContactUs() {
       console.error("Unknown error:", err);
     }
   }
-  console.log(storeData);
 
   return (
     <>
