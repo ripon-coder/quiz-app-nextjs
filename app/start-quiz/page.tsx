@@ -192,6 +192,7 @@ export default function Quiz() {
   };
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     startQuiz();
   }, [quizId]);
 
