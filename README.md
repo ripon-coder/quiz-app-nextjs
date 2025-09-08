@@ -27,5 +27,3 @@ A modern **Quiz Application** built with **Next.js (Frontend)** and **Laravel (B
 - Sanctum / API Authentication
 
 ---
-
-## 📂 Project Structure
